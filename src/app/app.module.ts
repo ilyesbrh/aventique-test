@@ -1,14 +1,14 @@
+import { DisplayProductsComponent } from './display-products/display-products.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { InventoryComponent } from './displayp/displayp.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InventoryComponent
+    DisplayProductsComponent
   ],
   imports: [
     BrowserModule,

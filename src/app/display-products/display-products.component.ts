@@ -17,10 +17,12 @@ interface Info {
 }
 
 @Component({
-  selector: "app-display-produit",
-  templateUrl: "./display-produit.component.html",
+  selector: 'app-display-products',
+  templateUrl: './display-products.component.html',
+  styleUrls: ['./display-products.component.scss']
 })
-export class InventoryComponent implements OnInit {
+export class DisplayProductsComponent implements OnInit {
+
   @ViewChild("relance") relanceEl!: ElementRef;
   a$: Observable<Info[]>;
   infos: any;
@@ -60,7 +62,7 @@ export class InventoryComponent implements OnInit {
   }
 
   // permet de faire une relance
-  rev(info: Info) {
+  revival(info: Info) {
     this.actionDeVerification();
     this.http.post("https://api-privee/relance", info);
   }
