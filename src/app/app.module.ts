@@ -5,11 +5,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DisplayInfosPipe } from './display-products/display-infos.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DisplayProductsComponent
+    DisplayProductsComponent,
+    DisplayInfosPipe
   ],
   imports: [
     BrowserModule,

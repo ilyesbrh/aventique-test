@@ -2,19 +2,10 @@ import { HttpClient } from "@angular/common/http";
 import {
   Component,
   ElementRef,
-  HostListener,
-  Injectable,
   OnInit,
   ViewChild,
 } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { ProductService } from "../product.service";
-
-interface Info {
-  quantite: number;
-  title: string;
-  data?: any;
-}
+import { Product, ProductDTO } from "../product";
 
 @Component({
   selector: 'app-display-products',
@@ -23,52 +14,32 @@ interface Info {
 })
 export class DisplayProductsComponent implements OnInit {
 
-  @ViewChild("relance") relanceEl!: ElementRef;
-  a$: Observable<Info[]>;
-  infos: any;
+  products: Promise<ProductDTO[]>;
 
-  constructor(private http: HttpClient, public service: ProductService) {
-    this.a$ = http.get<Info[]>("https://api-privee/info");
+  constructor(private http: HttpClient) {
+    this.products = this.http.get<ProductDTO[]>("https://api-privee/product").toPromise().catch(_ => Product.mockProducts());
   }
 
-  ngOnInit(): void {
-    this.a$.subscribe((info) => (this.infos = info));
+  async ngOnInit() {
   }
 
-  getInfoData(info: Info) {
-    return info.data !== null;
+  async command(product: ProductDTO) {
+    await this.http.post("https://api-privee/envoyer-commande", product).toPromise();
   }
 
-  @HostListener("mouseenter") mouseenter() {
-    this.relanceEl.nativeElement.style.backgroundColor = "red";
+  async cancel(product: ProductDTO) {
+    await this.http.post("https://api-privee/cancel-commande", product).toPromise();
   }
 
-  @HostListener("mouseleave") mouseleave() {
-    this.relanceEl.nativeElement.style.backgroundColor = "transparent";
+  async claim(product: ProductDTO) {
+    const canClaim = await this.verification(product);
+    if (!canClaim) { alert('Réclamation deja en attente'); return };
+
+    await this.http.post("https://api-privee/relance", product).toPromise();
   }
 
-  // @HostListener('mouseexit') mouseexit() {
-  //     if(this.relanceEl) {
-  //         this.relanceEl.nativeElement.style.backgroundColor = 'yellow';
-  //     }
-  // }
-
-  command(info: Info) {
-    this.http.post("https://api-privee/envoyer-commande", info);
-  }
-
-  cancel(info: Info) {
-    this.http.post("https://api-privee/cancel-commande", info);
-  }
-
-  // permet de faire une relance
-  revival(info: Info) {
-    this.actionDeVerification();
-    this.http.post("https://api-privee/relance", info);
-  }
-
-  public actionDeVerification() {
-    //.....
-    return true;
+  async verification(product: ProductDTO) {
+    const result = await this.http.post<any>("https://api-privee/relance/check", product).toPromise().catch(_ => null);
+    return !result ? false : result.canClaim;
   }
 }

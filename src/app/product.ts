@@ -1,3 +1,7 @@
+/*
+  Separating models and DTO's from component can help reduce code's complexcity
+*/
+
 export interface ProductDTO {
   title: string,
   quantity: number,
@@ -22,6 +26,7 @@ export class Product implements ProductDTO {
     this.color = p?.color;
   }
 
+  /* Create some mocks to display cause endpoints are not working */
   static mockProducts() {
     return [...Array(50)].map((_, i) => {
       return {

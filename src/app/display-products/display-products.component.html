@@ -1,12 +1,15 @@
 <h1>Inventaire</h1>
 
-<div *ngFor="let info of infos">
-  <div>{{service.getInfoOfQuantite(info.quantite, info.title)}}</div>
-  <div *ngIf="getInfoData(info)">
-    <div>{{info.data}}</div>
+<ng-container>
+  <div class="product" *ngFor="let product of products | async">
+    <div>{{ product | displayInfos : 'header' }}</div>
+    <div *ngIf="product | displayInfos : 'exists'">
+      <div>{{product | displayInfos : 'data'}}</div>
+    </div>
+
+    <button (click)="command(product)">Commander un produit</button>
+    <button (click)="cancel(product)">Annuler la commande</button>
+    <button class="danger" (click)="claim(product)">Réclamer</button>
   </div>
 
-  <button (click)="command(infos)">Commander un produit</button>
-  <button (click)="cancel(infos)">Annuler la commande</button>
-  <button #relance (click)="revival(infos)">Relancer le fournisseur</button>
-</div>
+</ng-container>

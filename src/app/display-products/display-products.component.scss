@@ -1,0 +1,10 @@
+// no need for host-listener cause host-listeners can cause performance issues
+.danger {
+  &:hover {
+    background: red;
+  }
+}
+
+.product {
+  padding: 16px 0;
+}
